@@ -1,0 +1,46 @@
+body{
+  overflow: hidden;
+  background-color: #202124;
+  
+  /* display: flex; */
+}
+
+.App {
+  font-size : calc(min(3.5vh, 7vw));
+  text-align: center;
+  background-color: #202124;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+  float: center;
+  color:#fefefe;
+  font-family: 'Noto Sans CJK KR';
+  font-weight:500;
+  display: inline-block;
+  margin: auto;
+  text-align: center;
+  display: flex;
+  overflow: hidden;
+}
+
+.Main{
+  width: 100%;
+  height: 100%;
+  max-width: calc(var(--vh, 1vh) * 50);
+  max-height: 200vw;
+  margin:auto;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: calc(var(--vh, 1vh) * 100);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
