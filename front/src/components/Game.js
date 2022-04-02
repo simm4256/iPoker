@@ -7,7 +7,6 @@ export default function Game(props) {
     const gameInfo = useSelector((state) => state.gameInfo);
     const socket = props.socket;
     const isMain = gameInfo.main;
-    console.log(gameInfo.chips);
     useEffect(() => {
         isMain && socket.emit('request : round start');
     }, []);
@@ -71,6 +70,12 @@ function Board(props) {
             <div className="board-round">
                 Round {gameInfo.round}
             </div>
+            {gameInfo.visibleDeckShffle ?
+                <div className="board-shuffle">
+                    덱 초기화 중...
+                </div>
+                : null}
+
             {gameInfo.phase > -1
                 ?
                 (gameInfo.myTurn
@@ -84,11 +89,14 @@ function Board(props) {
                     </div>)
                 : null
             }
-            <img className="board-myChip chip" src="images/chip_white.png" alt="" />
+            {!gameInfo.visibleDeckShffle ?
+                <img className="board-myChip chip" src="images/chip_white.png" alt="" />
+                : null
+            }
             <div className="board-myChip-text chip-text">
                 x{gameInfo.chips}
             </div>
-            {gameInfo.phase > -3 ?
+            {gameInfo.phase > -3 && (!gameInfo.visibleDeckShffle) ?
                 <>
                     <img className="board-chips chip" src="images/chip_white.png" alt="" />
                     <div className="board-chips-text chip-text">
@@ -97,7 +105,7 @@ function Board(props) {
                 </>
                 : null
             }
-            {gameInfo.phase < -1
+            {gameInfo.phase < -1 && (!gameInfo.visibleDeckShffle)
                 ?
                 <>
                     <div className="board-enemyCard card">
@@ -166,7 +174,13 @@ function PlayRaise(props) {
     const gameInfo = props.gameInfo;
     let [raiseText, raiseTextChanger] = useState('');
     let [bottomColor, bottomColorChanger] = useState('#aaaaaa');
-    let [bottomVisible, bottomVisibleChanger] = useState('');
+    let [bottomVisible, bottomVisibleChanger] = useState('maximum');
+    const bottomTexts = {
+        maximum: `최대 ${gameInfo.chips - gameInfo.lastRaisedChips}개`,
+        minimum: `최소 1개`,
+        nan: `숫자를 입력하세요`,
+        nothing: '',
+    }
     return (
         <>
             <div className="play-left button" onClick={(() => { dispatch(changeInfoValue(['visiblePlay', 'default'])) })}>
@@ -176,14 +190,15 @@ function PlayRaise(props) {
                 {gameInfo.lastRaisedChips !== 0 ? <div className="play-middle-top-text">{gameInfo.lastRaisedChips}개 받고</div> : null}
                 <input type="text" placeholder="칩 입력" onChange={(e) => { raiseTextChanger(e.target.value) }} />
                 <div className="play-middle-bottom-text" style={{ 'color': bottomColor }}>
-                    {bottomVisible === 'maximum' ? `최대 ${gameInfo.chips - gameInfo.lastRaisedChips}개`
-                        : (bottomVisible === 'minimum' ? `최소 1개`
-                            : '')}
+                    {bottomTexts[bottomVisible]}
                 </div>
             </div>
             <div className="play-right button" onClick={() => {
-                //todo : before emit, check validation
-                if (Number(raiseText) > (gameInfo.chips - gameInfo.lastRaisedChips)) {
+                if (isNaN(Number(raiseText))) {
+                    bottomColorChanger('red');
+                    bottomVisibleChanger('nan');
+                }
+                else if (Number(raiseText) > (gameInfo.chips - gameInfo.lastRaisedChips)) {
                     bottomColorChanger('red');
                     bottomVisibleChanger('maximum');
                 }
@@ -193,7 +208,7 @@ function PlayRaise(props) {
                 }
                 else {
                     bottomColorChanger('#aaaaaa');
-                    bottomVisibleChanger('');
+                    bottomVisibleChanger('nothing');
                     socket.emit('request : raise', Number(raiseText));
                 }
             }}>

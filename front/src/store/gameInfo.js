@@ -20,6 +20,7 @@ const initialState = {
 
     visiblePlay: 'default',
     visibleResult: false,
+    visibleDeckShffle: false,
 }
 
 export const gameInfoSlice = createSlice({
@@ -30,7 +31,7 @@ export const gameInfoSlice = createSlice({
             state.main = action.payload.main;
             state.myTurn = action.payload.initTurn;
             state.chips = state.enemyChips = 20;
-            state.visibleResult = false;
+            state.visibleResult = state.visibleDeckShffle = false;
             if (!state.myTurn)
                 state.visiblePlay = 'text';
             state.round = 0;

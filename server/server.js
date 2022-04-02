@@ -67,6 +67,10 @@ io.on('connection', socket => {
             const enemyId = games[socket.id].player2.id;
             console.log(`   User ${clients[socket.id].number} round start! / ${new Date().toISOString()}`);
             let deckSize = games[socket.id].deck.length;
+            if (deckSize === 0) {
+                games[socket.id].deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+                deckSize = 20;
+            }
             let ind = Math.floor(Math.random() * deckSize);
             games[socket.id].player1.card = games[socket.id].deck[ind];
             clients[socket.id].gameInfo.card = games[socket.id].deck[ind];
@@ -174,11 +178,14 @@ io.on('connection', socket => {
                 clients[clients[socket.id].enemyId].isGaming = false;
                 io.to(socket.id).emit(`response : game over`, games[socket.id]);
                 io.to(clients[socket.id].enemyId).emit(`response : game over`, games[socket.id]);
+                delete games[socket.id];
             }
             else {
                 io.to(socket.id).emit(`order : round start`, games[socket.id]);
+                if (games[socket.id].round % 10 === 0)
+                    io.to(clients[socket.id].enemyId).emit(`order : deck shuffle`);
+                games[socket.id].round++;
             }
-            delete games[socket.id];
         }
         catch { }
     });

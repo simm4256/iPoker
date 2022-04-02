@@ -20,7 +20,9 @@ export default function Socket(socket, dispatch) {
         enemy = isMain ? 'player2' : 'player1';
     });
     socket.on('response : round start', (gameServer) => {
+        console.log(1);
         dispatch(initRound([gameServer, my, enemy]));
+        console.log(2);
     });
     socket.on(`response : increase phase`, (gameServer) => {
         dispatch(increasePhase(gameServer));
@@ -44,8 +46,22 @@ export default function Socket(socket, dispatch) {
             dispatch(changePage('mainPage'));
         }, 5000);
     });
-    socket.on(`order : round start`, () => {
-        socket.emit(`request : round start`);
+    socket.on(`order : round start`, (gameServer) => {
+        if (gameServer.round % 10 === 0) {
+            dispatch(changeInfoValue(['visibleDeckShffle', true]));
+            setTimeout(() => {
+                socket.emit(`request : round start`);
+                dispatch(changeInfoValue(['visibleDeckShffle', false]));
+            }, 3000);
+        }
+        else
+            socket.emit(`request : round start`);
+    });
+    socket.on(`order : deck shuffle`, () => {
+        dispatch(changeInfoValue(['visibleDeckShffle', true]));
+        setTimeout(() => {
+            dispatch(changeInfoValue(['visibleDeckShffle', false]));
+        }, 3000);
     });
     socket.on('response : enemy disconnected', () => {
         dispatch(gameOver(true));
