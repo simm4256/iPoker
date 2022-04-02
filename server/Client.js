@@ -5,6 +5,7 @@ class Client {
     enemyId
     isGaming = false
     gameInfo
+    lastTime
     constructor(number, id) {
         this.number = number;
         this.id = id;
@@ -14,6 +15,11 @@ class Client {
             initTurn: true,
             main: true,
             card: -1,
+        }
+        this.lastTime = {
+            chipsChange: 9999999999999,
+            enemyChipsChange: 9999999999999,
+            boardChipsChange: 9999999999999,
         }
     }
 }

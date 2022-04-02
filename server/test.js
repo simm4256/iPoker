@@ -1,14 +1,17 @@
-function p(msg, waitTime) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => { console.log(msg) }, waitTime);
+const aaa = 'aaa';
+let fn = async () => {
+    const a = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log(aaa);
+            resolve();
+        }, 1000);
+    });
+    const b = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log(aaa);
+            resolve();
+        }, 1000);
     });
 }
 
-async function x() {
-    const a = await (() => { setTimeout(() => { console.log('a'); resolve() }, 4000) })();
-    const b = await (() => { setTimeout(() => { console.log('b'); resolve() }, 5000) })();
-}
-
-let a = undefined;
-
-console.log(a === undefined);
+fn();

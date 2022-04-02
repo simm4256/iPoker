@@ -95,6 +95,11 @@ div{
     transform: translate(-50%, -50%);
     font-size:75%
 }
+.enemy-chip-change{
+    top:86.7%;
+    left:49%;
+    font-size:75%;
+}
 
 
 
@@ -129,6 +134,13 @@ div{
     top:50%;
     left:50%;
 }
+.board-tenDie{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top:50%;
+    left:50%;
+    font-size: 90%;
+}
 .arrow{
     font-size : 200%;
     // border:1px solid red;
@@ -154,12 +166,22 @@ div{
     left:90%;
     transform: translate(-50%, -50%);
 }
+.board-myChip-change{
+    top:83%;
+    left:91%;
+    transform: translate(-50%, -50%);
+}
 .board-chips{
     top:35%;
     left:5%;
 }
 .board-chips-text{
     top:60%;
+    left:12.5%;
+    transform: translate(-50%, -50%);
+}
+.board-chip-change{
+    top:69%;
     left:12.5%;
     transform: translate(-50%, -50%);
 }

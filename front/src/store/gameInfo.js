@@ -12,6 +12,7 @@ const initialState = {
     lastRaisedChips: 0,
     lastBetType: '',
     lastBetChips: -1,
+    isChecked: false,
 
     enemyId: '',
     enemyChips: 20,
@@ -21,6 +22,19 @@ const initialState = {
     visiblePlay: 'default',
     visibleResult: false,
     visibleDeckShffle: false,
+    visibleTenDie: false,
+
+    chipsChange: 0,
+    chipsChangeVisible: false,
+    enemyChipsChange: 0,
+    enemyChipsChangeVisible: false,
+    boardChipsChange: 0,
+    boardChipsChangeVisible: false,
+}
+
+function InputNewDate(state, key, date, socket) {
+    state[key + 'Visible'] = true;
+    socket.emit(`request : input new date`, [key, date]);
 }
 
 export const gameInfoSlice = createSlice({
@@ -35,6 +49,11 @@ export const gameInfoSlice = createSlice({
             if (!state.myTurn)
                 state.visiblePlay = 'text';
             state.round = 0;
+            state.isChecked = false;
+
+            state.chipsChange = 0;
+            state.enemyChipsChange = 0;
+            state.boardChipsChange = 0;
         },
         toggleInfoValue: (state, action) => {
             state[action.payload] = !state[action.payload];
@@ -51,6 +70,7 @@ export const gameInfoSlice = createSlice({
                 state[action.payload[0]] = action.payload[1];
         },
         initRound: (state, action) => {
+            const socket = action.payload[3];
             state.round++;
             if (state.main)
                 state.myTurn = (state.round % 2 === 0) ? false : true;
@@ -60,24 +80,46 @@ export const gameInfoSlice = createSlice({
             state.enemyCard = action.payload[0][action.payload[2]].card % 10;
             state.card = state.card === 0 ? 10 : state.card;
             state.enemyCard = state.enemyCard === 0 ? 10 : state.enemyCard;
-            state.bettedChips = 2;
             state.chips -= 1;
+            state.chipsChange = '-1';
+
+            InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
             state.enemyChips -= 1;
+            state.enemyChipsChange = '-1';
+
+            InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
+            state.bettedChips = 2;
+            state.boardChipsChange = '+2';
+
+            InputNewDate(state, 'boardChipsChange', new Date().getTime(), socket);
             state.phase = 1;
             state.enemyText = state.myTurn ? '' : '...';
             state.text = '';
             state.visiblePlay = state.myTurn ? `default` : `text`;
             state.lastRaisedChips = 0;
             state.lastBetType = '';
+            state.isChecked = false;
+            state.visibleTenDie = false;
         },
         increasePhase: (state, action) => {
-            const lastBetType = action.payload.lastBetType;
-            const lastBetChips = action.payload.lastBetChips
+            const socket = action.payload[1];
+            const lastBetType = action.payload[0].lastBetType;
+            const lastBetChips = action.payload[0].lastBetChips
             state.myTurn = !state.myTurn;
             state.bettedChips += lastBetChips + state.lastRaisedChips;
+            if (lastBetChips + state.lastRaisedChips > 0) {
+                state.boardChipsChange = `+${lastBetChips + state.lastRaisedChips}`;
+
+                InputNewDate(state, 'boardChipsChange', new Date().getTime(), socket);
+            }
             state.phase++;
             if (!state.myTurn) {
                 state.chips -= lastBetChips + state.lastRaisedChips;
+                if (lastBetChips + state.lastRaisedChips > 0) {
+                    state.chipsChange = `-${lastBetChips + state.lastRaisedChips}`;
+
+                    InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
+                }
                 state.enemyText = '...';
                 if (lastBetType === 'check')
                     state.text = `체크`;
@@ -89,6 +131,11 @@ export const gameInfoSlice = createSlice({
             }
             else {
                 state.enemyChips -= lastBetChips + state.lastRaisedChips;
+                if (lastBetChips + state.lastRaisedChips > 0) {
+                    state.enemyChipsChange = `-${lastBetChips + state.lastRaisedChips}`;
+
+                    InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
+                }
                 if (lastBetType === 'check')
                     state.enemyText = `체크`;
                 else if (state.lastRaisedChips === 0)
@@ -100,23 +147,44 @@ export const gameInfoSlice = createSlice({
             state.lastRaisedChips = lastBetChips;
         },
         endRound: (state, action) => {
+            const gameServer = action.payload[0];
+            const socket = action.payload[1];
             if (state.phase > -1) {
-                const gameServer = action.payload;
+                if (action.payload[2] !== 1) {
+                    console.log(`err! round${state.round}, process${action.payload[2]}`);
+                    return;
+                }
                 [state.lastBetType, state.lastBetChips] = [gameServer.lastBetType, gameServer.lastBetChips];
 
-                //1. 판 업데이트 (like increasePhase)
-                if (state.lastBetType === 'call')
+
+                if (state.lastBetType === 'call') {
                     state.bettedChips += state.lastBetChips;
+                    if (state.lastBetChips > 0) {
+                        state.boardChipsChange = `+${state.lastBetChips}`;
+
+                        InputNewDate(state, 'boardChipsChange', new Date().getTime(), socket);
+                    }
+                }
                 if (state.myTurn) {
                     state.visiblePlay = 'text';
                     state.text = (state.lastBetType === 'call' ? '콜' : '다이');
-                    if (state.lastBetType === 'call')
+                    if (state.lastBetType === 'call') {
                         state.chips -= state.lastBetChips;
+                        if (state.lastBetChips > 0) {
+                            state.chipsChange = `-${state.lastBetChips}`;
+                            InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
+                        }
+                    }
                 }
                 else {
                     state.enemyText = (state.lastBetType === 'call' ? '콜' : '다이');
-                    if (state.lastBetType === 'call')
+                    if (state.lastBetType === 'call') {
                         state.enemyChips -= state.lastBetChips;
+                        if (state.lastBetChips > 0) {
+                            state.enemyChipsChange = `-${state.lastBetChips}`;
+                            InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
+                        }
+                    }
                 }
                 state.phase = -1;
             }
@@ -126,34 +194,77 @@ export const gameInfoSlice = createSlice({
                     if (state.lastBetType === 'call') {
                         if (state.card > state.enemyCard) {
                             state.chips += state.bettedChips;
+                            state.chipsChange = `+${state.bettedChips}`;
+
+                            InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
                         }
                         else if (state.card < state.enemyCard) {
                             state.enemyChips += state.bettedChips;
+                            state.enemyChipsChange = `+${state.bettedChips}`;
+
+                            InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
                         }
                         else {
                             state.chips += state.bettedChips / 2;
+                            state.chipsChange = `+${state.bettedChips / 2}`;
+                            InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
+
                             state.enemyChips += state.bettedChips / 2;
+                            state.enemyChipsChange = `+${state.bettedChips / 2}`;
+                            InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
                         }
                     }
                     else {
-                        if (state.myTurn)
+                        if (state.myTurn) {
                             state.enemyChips += state.bettedChips;
-                        else
+                            state.enemyChipsChange = `+${state.bettedChips}`;
+                            InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
+                        }
+                        else {
                             state.chips += state.bettedChips;
+                            state.chipsChange = `+${state.bettedChips}`;
+                            InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
+                        }
                     }
                 }
                 if (state.phase === -4)
-                    state.main && action.payload.emit('request : round complete');
+                    state.main && socket.emit('request : round complete');
             }
         },
         gameOver: (state, action) => {
             if (action.payload)
                 state.chips = 999;
             state.visibleResult = true;
-        }
+        },
+        turnOffChipsChange: (state, action) => {
+            for (let i of action.payload) {
+                state[i + 'Visible'] = false;
+            }
+        },
+        tenDie: (state, action) => {
+            const socket = action.payload;
+            state.visibleTenDie = true;
+            let reducedChips = state.myTurn ? Math.min(5, state.chips) : Math.min(5, state.enemyChips);
+            if (reducedChips < 1)
+                return;
+            if (state.myTurn) {
+                state.chips -= reducedChips;
+                state.chipsChange = `-${reducedChips}`;
+                InputNewDate(state, 'chipsChange', new Date().getTime(), socket);
+            }
+            else {
+                state.enemyChips -= reducedChips;
+                state.enemyChipsChange = `-${reducedChips}`;
+                InputNewDate(state, 'enemyChipsChange', new Date().getTime(), socket);
+            }
+            state.bettedChips += reducedChips;
+            state.boardChipsChange = `+${reducedChips}`;
+            InputNewDate(state, 'boardChipsChange', new Date().getTime(), socket);
+
+        },
     },
 })
 
-export const { initGame, changeInfoAll, changeInfoValue, toggleInfoValue, initRound, increasePhase, endRound, gameOver } = gameInfoSlice.actions
+export const { initGame, changeInfoAll, changeInfoValue, toggleInfoValue, initRound, increasePhase, endRound, gameOver, turnOffChipsChange, tenDie } = gameInfoSlice.actions
 
 export default gameInfoSlice.reducer

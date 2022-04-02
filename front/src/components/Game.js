@@ -54,6 +54,12 @@ function SpeechBubble(props) {
             <div className="enemy-chip-text chip-text">
                 x{gameInfo.enemyChips}
             </div>
+            {gameInfo.enemyChipsChangeVisible ?
+                <div className="enemy-chip-change chip-text" style={{ 'color': Number(gameInfo.enemyChipsChange) > 0 ? '#ff2281' : '#3baaff' }}>
+                    {gameInfo.enemyChipsChange}
+                </div>
+                : null
+            }
         </div>
     )
 }
@@ -75,6 +81,11 @@ function Board(props) {
                     덱 초기화 중...
                 </div>
                 : null}
+            {gameInfo.visibleTenDie ?
+                <div className="board-tenDie">
+                    {!gameInfo.myTurn ? `Enemy TenDie!!` : `You TenDie..`}
+                </div>
+                : null}
 
             {gameInfo.phase > -1
                 ?
@@ -90,18 +101,35 @@ function Board(props) {
                 : null
             }
             {!gameInfo.visibleDeckShffle ?
-                <img className="board-myChip chip" src="images/chip_white.png" alt="" />
+                <>
+                    <img className="board-myChip chip" src="images/chip_white.png" alt="" />
+                    <div className="board-myChip-text chip-text">
+                        x{gameInfo.chips}
+                    </div>
+                    {
+                        gameInfo.chipsChangeVisible ?
+                            <div className="board-myChip-change chip-text" style={{ 'color': Number(gameInfo.chipsChange) > 0 ? '#ff2281' : '#3baaff' }}>
+                                {gameInfo.chipsChange}
+                            </div>
+                            : null
+                    }
+                </>
                 : null
             }
-            <div className="board-myChip-text chip-text">
-                x{gameInfo.chips}
-            </div>
             {gameInfo.phase > -3 && (!gameInfo.visibleDeckShffle) ?
                 <>
                     <img className="board-chips chip" src="images/chip_white.png" alt="" />
                     <div className="board-chips-text chip-text">
                         x{gameInfo.bettedChips}
                     </div>
+
+                    {
+                        gameInfo.boardChipsChangeVisible ?
+                            <div className="board-chip-change chip-text" style={{ 'color': Number(gameInfo.boardChipsChange) > 0 ? '#ff2281' : '#3baaff' }}>
+                                {gameInfo.boardChipsChange}
+                            </div>
+                            : null
+                    }
                 </>
                 : null
             }
@@ -147,7 +175,7 @@ function PlayInit(props) {
         <>
             <div className="buttonDiv">
                 {
-                    (gameInfo.chips - gameInfo.lastRaisedChips > 0) ?
+                    (gameInfo.chips - gameInfo.lastRaisedChips > 0) && gameInfo.enemyChips > 0 && !gameInfo.isChecked ?
                         <button className="button" onClick={(() => { dispatch(changeInfoValue(['visiblePlay', 'raise'])) })}>
                             레이즈
                         </button>
@@ -155,12 +183,18 @@ function PlayInit(props) {
                 }
             </div>
             <div className="buttonDiv" >
-                <button className="button" onClick={(() => { socket.emit(`request : ${gameInfo.phase === 1 ? 'check' : 'call'}`) })}>
+                <button className="button" onClick={(() => {
+                    socket.emit(`request : ${gameInfo.phase === 1 ? 'check' : 'call'}`);
+                    if (gameInfo.phase === 1)
+                        dispatch(changeInfoValue(['isChecked', true]));
+                })}>
                     {gameInfo.phase === 1 ? '체크' : `콜(${gameInfo.lastRaisedChips})`}
                 </button>
             </div>
             <div className="buttonDiv" >
-                <button className='button' onClick={(() => { socket.emit(`request : die`) })}>
+                <button className='button' onClick={(() => {
+                    socket.emit(`request : die`);
+                })}>
                     다이
                 </button>
             </div>
@@ -176,9 +210,10 @@ function PlayRaise(props) {
     let [bottomColor, bottomColorChanger] = useState('#aaaaaa');
     let [bottomVisible, bottomVisibleChanger] = useState('maximum');
     const bottomTexts = {
-        maximum: `최대 ${gameInfo.chips - gameInfo.lastRaisedChips}개`,
+        maximum: `최대 ${Math.min(gameInfo.chips - gameInfo.lastRaisedChips, gameInfo.enemyChips)}개`,
         minimum: `최소 1개`,
         nan: `숫자를 입력하세요`,
+        nai: `정수를 입력하세요`,
         nothing: '',
     }
     return (
@@ -198,7 +233,11 @@ function PlayRaise(props) {
                     bottomColorChanger('red');
                     bottomVisibleChanger('nan');
                 }
-                else if (Number(raiseText) > (gameInfo.chips - gameInfo.lastRaisedChips)) {
+                else if (Number.isInteger(Number(raiseText)) !== true) {
+                    bottomColorChanger('red');
+                    bottomVisibleChanger('nai');
+                }
+                else if (Number(raiseText) > (Math.min(gameInfo.chips - gameInfo.lastRaisedChips, gameInfo.enemyChips))) {
                     bottomColorChanger('red');
                     bottomVisibleChanger('maximum');
                 }

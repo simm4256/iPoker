@@ -5,6 +5,7 @@ class GameServer {
     lastBetType
     lastBetChips
     totalBetChips
+    isTenDie
     player1
     player2
 
@@ -26,6 +27,7 @@ class GameServer {
         this.lastBetType = '';
         this.lastBetChips = 0;
         this.totalBetChips = 0;
+        this.isTenDie = false;
     }
 
     ToggleTurn() {
