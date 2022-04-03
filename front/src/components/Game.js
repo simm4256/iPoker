@@ -223,7 +223,7 @@ function PlayRaise(props) {
             </div>
             <div className="play-middle">
                 {gameInfo.lastRaisedChips !== 0 ? <div className="play-middle-top-text">{gameInfo.lastRaisedChips}개 받고</div> : null}
-                <input type="text" placeholder="칩 입력" onChange={(e) => { raiseTextChanger(e.target.value) }} />
+                <input type="number" placeholder="칩 입력" onChange={(e) => { raiseTextChanger(e.target.value) }} />
                 <div className="play-middle-bottom-text" style={{ 'color': bottomColor }}>
                     {bottomTexts[bottomVisible]}
                 </div>

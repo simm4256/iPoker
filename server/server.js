@@ -87,7 +87,7 @@ io.on('connection', socket => {
                 deckSize = 20;
             }
             let ind = Math.floor(Math.random() * deckSize);
-            games[socket.id].player1.card = 10;
+            games[socket.id].player1.card = games[socket.id].deck[ind];
             clients[socket.id].gameInfo.card = games[socket.id].deck[ind];
             games[socket.id].deck = [...games[socket.id].deck.slice(0, ind), ...games[socket.id].deck.slice(ind + 1, deckSize)];
             games[socket.id].player1.chips--;
@@ -96,7 +96,7 @@ io.on('connection', socket => {
             ind = Math.floor(Math.random() * deckSize);
             if (games[socket.id].deck[ind] === undefined)
                 console.log(`       Warning!! decksize : ${deckSize}, ind : ${ind}, card : ${games[socket.id].deck[ind]}, cardArray : ${games[socket.id].deck}`);
-            games[socket.id].player2.card = 10;
+            games[socket.id].player2.card = games[socket.id].deck[ind];
             clients[socket.id].gameInfo.card = games[socket.id].deck[ind];
             games[socket.id].deck = [...games[socket.id].deck.slice(0, ind), ...games[socket.id].deck.slice(ind + 1, deckSize)];
             games[socket.id].player2.chips--;

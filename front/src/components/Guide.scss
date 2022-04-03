@@ -1,0 +1,13 @@
+.guideBox{
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 15% 85%;
+}
+.guideBox div{
+    margin: auto;
+}
+
+.guide-nav{
+    font-size : 150%;
+}
