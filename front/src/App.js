@@ -8,7 +8,10 @@ const Matching = lazy(() => import('./components/Matching'));
 const Game = lazy(() => import('./components/Game'));
 const Guide = lazy(() => import('./components/Guide'));
 
-const socket = io.connect('14.34.17.121:8080', { transports: ['websocket'] });
+
+const serverIp = '13.124.211.209';
+const serverPort = '8080';
+const socket = io.connect(`${serverIp}:${serverPort}`, { transports: ['websocket'] });
 
 
 
