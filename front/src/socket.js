@@ -4,7 +4,7 @@ import { changePage } from "./store/page";
 export default function Socket(socket, dispatch) {
     let isMain;
     let my, enemy;
-    const interval = 1500;
+    const interval = 2000;
     socket.on('response : matching fail', () => {
         dispatch(changePage('matchingPage'));
     });

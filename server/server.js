@@ -79,15 +79,21 @@ io.on('connection', socket => {
 
     socket.on('request : round start', () => {
         try {
+            //init
+            games[socket.id].lastBetChips = 0;
+            games[socket.id].totalBetChips = 0;
+            games[socket.id].isTenDie = false;
+            this.lastBetType = '';
+
             const enemyId = games[socket.id].player2.id;
-            console.log(`   User ${clients[socket.id].number} round start! / ${new Date().toISOString()}`);
+            console.log(`   User ${clients[socket.id].number} round start! [${games[socket.id].player1.chips}:${games[socket.id].player2.chips}] / ${new Date().toISOString()}`);
             let deckSize = games[socket.id].deck.length;
             if (deckSize === 0) {
                 games[socket.id].deck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
                 deckSize = 20;
             }
             let ind = Math.floor(Math.random() * deckSize);
-            games[socket.id].player1.card = games[socket.id].deck[ind];
+            games[socket.id].player1.card = 4
             clients[socket.id].gameInfo.card = games[socket.id].deck[ind];
             games[socket.id].deck = [...games[socket.id].deck.slice(0, ind), ...games[socket.id].deck.slice(ind + 1, deckSize)];
             games[socket.id].player1.chips--;
@@ -96,26 +102,23 @@ io.on('connection', socket => {
             ind = Math.floor(Math.random() * deckSize);
             if (games[socket.id].deck[ind] === undefined)
                 console.log(`       Warning!! decksize : ${deckSize}, ind : ${ind}, card : ${games[socket.id].deck[ind]}, cardArray : ${games[socket.id].deck}`);
-            games[socket.id].player2.card = games[socket.id].deck[ind];
+            games[socket.id].player2.card = 3
             clients[socket.id].gameInfo.card = games[socket.id].deck[ind];
             games[socket.id].deck = [...games[socket.id].deck.slice(0, ind), ...games[socket.id].deck.slice(ind + 1, deckSize)];
             games[socket.id].player2.chips--;
 
             games[socket.id].totalBetChips = 2;
 
-            console.log(`   User ${clients[socket.id].number} card : ${games[socket.id].player1.card} , User ${clients[enemyId].number} card : ${games[socket.id].player2.card} / deck : ${games[socket.id].deck}`);
+            console.log(`   User ${clients[socket.id].number} card : ${games[socket.id].player1.card} , User ${clients[enemyId].number} card : ${games[socket.id].player2.card} / deck : ${games[socket.id].deck} [${games[socket.id].player1.chips}:${games[socket.id].player2.chips}]`);
 
             io.to(socket.id).emit('response : round start', games[socket.id]);
-            console.log(`main round start`);
             io.to(enemyId).emit('response : round start', games[socket.id]);
-            console.log(`enemy round start`);
         }
         catch { }
     });
 
     socket.on('request : raise', (raiseChips) => {
         try {
-            console.log(`   User ${clients[socket.id].number} raise ${raiseChips} / ${new Date().toISOString()}`);
             const enemyId = clients[socket.id].enemyId;
             const main = clients[socket.id].gameInfo.main ? socket.id : enemyId;
             games[main][`player${main === socket.id ? '1' : '2'}`].chips -= games[main].lastBetChips + raiseChips;
@@ -127,13 +130,13 @@ io.on('connection', socket => {
 
             io.to(socket.id).emit(`response : increase phase`, games[main]);
             io.to(enemyId).emit(`response : increase phase`, games[main]);
+            console.log(`   User ${clients[socket.id].number} raise ${raiseChips}. remain chips:${games[main][`player${main === socket.id ? '1' : '2'}`].chips} / ${new Date().toISOString()}`);
         }
         catch { }
     });
 
     socket.on('request : check', () => {
         try {
-            console.log(`   User ${clients[socket.id].number} check / ${new Date().toISOString()}`);
             const enemyId = clients[socket.id].enemyId;
             const main = clients[socket.id].gameInfo.main ? socket.id : enemyId;
             games[main].phase++;
@@ -141,6 +144,7 @@ io.on('connection', socket => {
             games[main].lastBetType = 'check';
             games[main].lastBetChips = 0;
 
+            console.log(`   User ${clients[socket.id].number} check. remain chips:${games[main][`player${main === socket.id ? '1' : '2'}`].chips} / ${new Date().toISOString()}`);
             io.to(socket.id).emit(`response : increase phase`, games[main]);
             io.to(enemyId).emit(`response : increase phase`, games[main]);
         }
@@ -148,7 +152,6 @@ io.on('connection', socket => {
     });
     socket.on('request : call', () => {
         try {
-            console.log(`   User ${clients[socket.id].number} call / ${new Date().toISOString()}`);
             const enemyId = clients[socket.id].enemyId;
             const main = clients[socket.id].gameInfo.main ? socket.id : enemyId;
 
@@ -167,6 +170,7 @@ io.on('connection', socket => {
             games[main].ToggleTurn();
             games[main].lastBetType = 'call';
 
+            console.log(`   User ${clients[socket.id].number} call. remain chips:${games[main][`player${main === socket.id ? '1' : '2'}`].chips} / ${new Date().toISOString()}`);
             io.to(socket.id).emit(`response : end round`, games[main]);
             io.to(enemyId).emit(`response : end round`, games[main]);
         }
@@ -200,7 +204,6 @@ io.on('connection', socket => {
     socket.on('request : round complete', () => {
         try {
             console.log(`   User ${clients[socket.id].number} round${games[socket.id].round} complete / ${new Date().toISOString()}`);
-            console.log(`   ${games[socket.id].player1.chips} : ${games[socket.id].player2.chips}`);
             if (games[socket.id].player1.chips < 1 || games[socket.id].player2.chips < 1) {
                 clients[socket.id].isGaming = false;
                 clients[clients[socket.id].enemyId].isGaming = false;

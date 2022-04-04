@@ -17,7 +17,7 @@ function App() {
   let page = useSelector((state) => state.page.pageName);
   let pageUI = {
     mainPage: <Main socket={socket}></Main>,
-    guidePage: <Guide></Guide>,
+    guidePage: <Guide socket={socket}></Guide>,
     matchingPage: <Matching></Matching>,
     gamePage: <Game socket={socket}></Game>,
   }

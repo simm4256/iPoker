@@ -1,13 +1,142 @@
+.guideAll{
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
 .guideBox{
     width: 100%;
     height: 100%;
     display: grid;
-    grid-template-rows: 15% 85%;
+    grid-template-rows: 10% 60% 30%;
+    margin: auto;
 }
 .guideBox div{
     margin: auto;
 }
 
-.guide-nav{
-    font-size : 150%;
+.guide-top{
+    width: 100%;
+    position: relative;
 }
+.guide-homeButton{
+    position: absolute;
+    height: 70%;
+    width: 10%;
+    top:50%;
+    left:85%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+}
+.guide-body{
+}
+
+img{
+    width: 100%;
+}
+
+
+.guide-bottom{
+    white-space: pre-wrap;
+}
+
+
+.guideArrow{
+    position: absolute;
+}
+.guide-leftArrow{
+    top:50%;
+    left:5%;
+    transform: translate(-50%, -50%) rotate(90deg) ;
+}
+.guide-rightArrow{
+    top:50%;
+    left:95%;
+    transform: translate(-50%, -50%) rotate(-90deg) ;
+}
+.guide-gotohome{
+    top:55%;
+    left:92%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    color:yellow;
+}
+
+
+.guideButton{
+    height: 90%;
+    width: 50%;
+    position: absolute;
+    cursor: pointer;
+}
+.guide-leftButton{
+    left:0%;
+    top:10%;
+}
+.guide-rightButton{
+    left:50%;
+    top:10%;
+}
+
+.fs-1{
+    font-size: 10%;
+}
+.fs-2{
+    font-size: 20%;
+}
+.fs-3{
+    font-size: 30%;
+}
+.fs-4{
+    font-size: 40%;
+}
+.fs-5{
+    font-size: 50%;
+}
+.fs-6{
+    font-size: 60%;
+}
+.fs-7{
+    font-size: 70%;
+}
+.fs-8{
+    font-size: 80%;
+}
+.fs-9{
+    font-size: 90%;
+}
+.fs-10{
+    font-size: 100%;
+}
+.fs-11{
+    font-size: 110%;
+}
+.fs-12{
+    font-size: 120%;
+}
+.fs-13{
+    font-size: 130%;
+}
+.fs-14{
+    font-size: 140%;
+}
+.fs-15{
+    font-size: 150%;
+}
+.fs-16{
+    font-size: 160%;
+}
+.fs-17{
+    font-size: 170%;
+}
+.fs-18{
+    font-size: 180%;
+}
+.fs-19{
+    font-size: 190%;
+}
+.fs-20{
+    font-size: 200%;
+}
+
+

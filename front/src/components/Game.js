@@ -55,7 +55,7 @@ function SpeechBubble(props) {
                 x{gameInfo.enemyChips}
             </div>
             {gameInfo.enemyChipsChangeVisible ?
-                <div className="enemy-chip-change chip-text" style={{ 'color': Number(gameInfo.enemyChipsChange) > 0 ? '#ff2281' : '#3baaff' }}>
+                <div className="enemy-chip-change chip-text" style={{ 'color': Number(gameInfo.enemyChipsChange) > 0 ? '#ff2222' : '#3baaff' }}>
                     {gameInfo.enemyChipsChange}
                 </div>
                 : null
@@ -108,7 +108,7 @@ function Board(props) {
                     </div>
                     {
                         gameInfo.chipsChangeVisible ?
-                            <div className="board-myChip-change chip-text" style={{ 'color': Number(gameInfo.chipsChange) > 0 ? '#ff2281' : '#3baaff' }}>
+                            <div className="board-myChip-change chip-text" style={{ 'color': Number(gameInfo.chipsChange) > 0 ? '#ff2222' : '#3baaff' }}>
                                 {gameInfo.chipsChange}
                             </div>
                             : null
@@ -125,7 +125,7 @@ function Board(props) {
 
                     {
                         gameInfo.boardChipsChangeVisible ?
-                            <div className="board-chip-change chip-text" style={{ 'color': Number(gameInfo.boardChipsChange) > 0 ? '#ff2281' : '#3baaff' }}>
+                            <div className="board-chip-change chip-text" style={{ 'color': Number(gameInfo.boardChipsChange) > 0 ? '#ff2222' : '#3baaff' }}>
                                 {gameInfo.boardChipsChange}
                             </div>
                             : null
