@@ -4,7 +4,7 @@
 
 <br>
 
-### [링크](http://ipoker-client.s3-website.ap-northeast-2.amazonaws.com/)에서 지금 한 번 해보세요!
+### [여기](http://ipoker-client.s3-website.ap-northeast-2.amazonaws.com/)에서 지금 한 번 해보세요!
 (1:1 게임이라서 같이 할 사람이 필요합니다. 혹은 같이 할 2번째 브라우저라던가요...)
 
 <br><br>
