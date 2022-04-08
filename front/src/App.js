@@ -9,7 +9,7 @@ const Game = lazy(() => import('./components/Game'));
 const Guide = lazy(() => import('./components/Guide'));
 
 
-const serverIp = '13.124.211.209';
+const serverIp = '3.39.135.118';
 const serverPort = '8080';
 const socket = io.connect(`${serverIp}:${serverPort}`, { transports: ['websocket'] });
 
