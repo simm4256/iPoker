@@ -8,6 +8,7 @@ export default function Game(props) {
     const socket = props.socket;
     const isMain = gameInfo.main;
     useEffect(() => {
+        console.log(gameInfo.round, isMain);
         if (gameInfo.round === 0 && isMain)
             socket.emit('request : round start');
     }, [gameInfo.round]);

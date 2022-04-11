@@ -69,6 +69,8 @@ io.on('connection', socket => {
         if (Matching(socket.id)) {
             const enemyId = clients[socket.id].enemyId;
             games[socket.id] = new GameServer(socket.id, enemyId);
+            clients[socket.id].gameInfo.initTurn = true;
+            clients[socket.id].gameInfo.main = true;
 
             io.to(socket.id).emit('response : game start', clients[socket.id].gameInfo);
 
