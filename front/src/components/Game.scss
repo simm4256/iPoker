@@ -1,32 +1,33 @@
-@keyframes blink-effect { 
-    50% { 
-        opacity: 0; 
-    } 
-} 
+@keyframes blink-effect {
+    50% {
+        opacity: 0;
+    }
+}
+
 $backgroundColor : #202124;
 
-.blink { 
-    animation: blink-effect 1s step-end infinite;     
+.blink {
+    animation: blink-effect 1s step-end infinite;
 }
 
 
 
 
 
-img{
+img {
     max-width: 100%;
 }
 
-div{
+div {
     // border : 1px solid red;
     text-align: center;
     background-color: $backgroundColor;
-    color:#fefefe;
+    color: #fefefe;
     font-family: 'Noto Sans CJK KR';
-    font-weight:500;
+    font-weight: 500;
 }
 
-.game-container{
+.game-container {
     display: grid;
     grid-template-columns: repeat(4, 25%);
     grid-template-rows: 45% 40% 15%;
@@ -37,253 +38,299 @@ div{
 
 
 
-.enemy-main{
+.enemy-main {
     grid-column-start: 1;
     grid-column-end: 4;
     position: relative;
 }
-.enemy-main img{
+
+.enemy-main img {
     width: auto;
-    height:100%;
+    height: 100%;
 }
-.enemy-main div{
-    position: absolute; 
+
+.enemy-main div {
+    position: absolute;
 }
-.enemy-main-card{
-    top:32%;
-    left:55.5%;
+
+.enemy-main-card {
+    top: 32%;
+    left: 55.5%;
     transform: translate(-50%, -50%) rotate(-5deg);
-    font-size:150%;
+    font-size: 150%;
 }
 
-.chip{
+.chip {
     position: absolute;
-    width : calc(min(20vw, calc(var(--vh, 1vh) * 7.6)));
+    width: calc(min(15vw, calc(var(--vh, 1vh) * 7.6)));
 }
-.chip-text{
-    font-size:75%;
+
+.chip-text {
+    font-size: 75%;
     position: absolute;
 }
 
-.enemy-status{
+.enemy-status {
     grid-column-start: 4;
     grid-column-end: 5;
     position: relative;
 }
-.enemy-speech{
+
+.enemy-speech {
     position: absolute;
-    top:10%;
-    left:-20%;
+    top: 10%;
+    left: -20%;
 }
-.enemy-text{
+
+.enemy-text {
     position: absolute;
-    top:29%;
-    left:30%;
+    top: 29%;
+    left: 30%;
     width: 90%;
     transform: translate(-50%, -50%);
     font-size: 75%;
     white-space: nowrap;
     white-space: pre-line;
 }
-.enemy-chip{
-    left:-3%;
-    top:69%;
+
+.enemy-chip {
+    left: -3%;
+    top: 69%;
 }
-.enemy-chip-text{
-    top:91%;
-    left:27%;
+
+.enemy-chip-text {
+    top: 91%;
+    left: 27%;
     transform: translate(-50%, -50%);
-    font-size:75%
-}
-.enemy-chip-change{
-    top:86.7%;
-    left:49%;
-    font-size:75%;
+    font-size: 75%
 }
 
+.enemy-chip-change {
+    top: 86.7%;
+    left: 49%;
+    font-size: 75%;
+}
 
 
-.board-main{
+
+.board-main {
     grid-column-start: 1;
     grid-column-end: 5;
     position: relative;
 }
-.board-line{
+
+.board-line {
     width: 100%;
     height: 100%;
-    border:calc(var(--vh, 1vh) * 0.5) solid white;
+    border: calc(var(--vh, 1vh) * 0.5) solid white;
     border-radius: 5vh;
 }
+
 .board-deck {
     position: absolute;
-    left:85%;
-    top:27.5%;
+    left: 85%;
+    top: 27.5%;
     width: calc(min(20vw, calc(var(--vh, 1vh) * 10)));
     transform: rotate(-90deg);
     clip: rect(0, 10%, 10%, 0);
 }
-.board-round{
+
+.board-round {
     position: absolute;
-    top:5%;
-    left:5%;
+    top: 5%;
+    left: 5%;
     font-size: 70%;
 }
-.board-shuffle{
+
+.board-shuffle {
     position: absolute;
     transform: translate(-50%, -50%);
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
 }
-.board-tenDie{
+
+.board-tenDie {
     position: absolute;
     transform: translate(-50%, -50%);
-    top:50%;
-    left:50%;
+    top: 50%;
+    left: 50%;
     font-size: 90%;
 }
-.arrow{
-    font-size : 200%;
+
+.arrow {
+    font-size: 200%;
     // border:1px solid red;
     position: absolute;
     height: 20%;
 }
-.board-enemyArrow{
-    top : 16%;
-    left:50%;
+
+.board-enemyArrow {
+    top: 16%;
+    left: 50%;
     transform: translate(-50%, -50%) rotate(180deg);
 }
-.board-myArrow{
-    left:50%;
-    top:84%;
+
+.board-myArrow {
+    left: 50%;
+    top: 84%;
     transform: translate(-50%, -50%)
 }
-.board-myChip{
-    top:77%;
-    left:70%;
+
+.board-myChip {
+    top: 77%;
+    left: 70%;
 }
-.board-myChip-text{
-    top:91%;
-    left:90%;
+
+.board-myChip-text {
+    top: 91%;
+    left: 90%;
     transform: translate(-50%, -50%);
 }
-.board-myChip-change{
-    top:83%;
-    left:91%;
+
+.board-myChip-change {
+    top: 83%;
+    left: 91%;
     transform: translate(-50%, -50%);
 }
-.board-chips{
-    top:35%;
-    left:5%;
+
+.board-chips {
+    top: 35%;
+    left: 5%;
 }
-.board-chips-text{
-    top:60%;
-    left:12.5%;
+
+.board-chips-text {
+    top: 60%;
+    left: 12.5%;
     transform: translate(-50%, -50%);
 }
-.board-chip-change{
-    top:69%;
-    left:12.5%;
+
+.board-chip-change {
+    top: 69%;
+    left: 12.5%;
     transform: translate(-50%, -50%);
 }
-.card{
+
+.card {
     position: absolute;
     width: 20%;
     height: 35%;
-    
-    border:calc(var(--vh, 1vh) * 0.4) solid white;
+
+    border: calc(var(--vh, 1vh) * 0.4) solid white;
     border-radius: 1vh;
-    background-color:$backgroundColor;
+    background-color: $backgroundColor;
     transform: translate(-50%, -50%);
 }
-.board-enemyCard{
-    top:25%;
-    left:50%;
+
+.board-enemyCard {
+    top: 25%;
+    left: 50%;
 }
-.board-myCard{
-    left:50%;
-    top:75%;
+
+.board-myCard {
+    left: 50%;
+    top: 75%;
 }
-.card .cardText{
-    font-size:150%;
+
+.card .cardText {
+    font-size: 150%;
     margin: auto;
 }
 
 
-.play-main{
+.play-main {
     grid-column-start: 1;
     grid-column-end: 5;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
-.buttonDiv{
+
+.buttonDiv {
     margin: auto;
     width: 100%;
 }
-.button{
+
+.button {
     background-color: #000;
-    color:white;
+    color: white;
     text-align: center;
     margin: auto;
     font-size: 100%;
-    border : calc(var(--vh, 1vh) * 0.5) solid white;
+    border: calc(var(--vh, 1vh) * 0.5) solid white;
     border-radius: calc(var(--vh, 1vh) * 5);
     width: 90%;
     cursor: pointer;
 }
-.button:hover{
+
+.button:hover {
     background-color: #fff;
     color: #000;
 }
 
-.play-middle{
+.play-middle {
     margin: auto;
-    font-size:100%;
-    // border:1px solid red;
+    font-size: 100%;
     width: 100%;
     height: 40%;
     position: relative;
+
+    meter {
+        height: 100%;
+        cursor: pointer;
+    }
+
+    ::-webkit-meter-optimum-value {
+        background-color: black;
+    }
+
+    ::-moz-meter-bar {
+        background-color: black;
+    }
 }
-.play-middle-top-text{
+
+.play-middle-top-text {
     position: absolute;
     transform: translate(-50%, -50%);
-    left:50%;
-    top:-30%;
-    font-size:60%;
+    left: 50%;
+    top: -30%;
+    font-size: 60%;
     width: 100%;
 }
-.play-middle-bottom-text{
+
+.play-middle-bottom-text {
     position: absolute;
     transform: translate(-50%, -50%);
-    left:50%;
-    top:130%;
-    font-size:60%;
+    left: 50%;
+    top: 130%;
+    font-size: 70%;
     width: 100%;
 }
-.play-middle input{
+
+.play-middle input {
     width: 100%;
     height: 100%;
     text-align: center;
 }
 
-.play-text{
+.play-text {
     grid-column-start: 1;
     grid-column-end: 4;
     position: relative;
 }
-.play-text div{
+
+.play-text div {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
-    top:50%;
+    top: 50%;
     width: 100%;
 }
 
 
-.result{
+.result {
     position: absolute;
     transform: translate(-50%, -50%);
-    left:50%;
-    top:50%;
+    left: 50%;
+    top: 50%;
     width: 90%;
     font-size: 220%;
 }

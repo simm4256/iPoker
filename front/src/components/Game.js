@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux"
 import { changeInfoValue } from "../store/gameInfo";
 import './Game.scss'
@@ -8,8 +8,9 @@ export default function Game(props) {
     const socket = props.socket;
     const isMain = gameInfo.main;
     useEffect(() => {
-        isMain && socket.emit('request : round start');
-    }, []);
+        if (gameInfo.round === 0 && isMain)
+            socket.emit('request : round start');
+    }, [gameInfo.round]);
     return (
         <div className="game-container">
             {gameInfo.visibleResult ?
@@ -206,15 +207,23 @@ function PlayRaise(props) {
     const dispatch = useDispatch();
     const socket = props.socket;
     const gameInfo = props.gameInfo;
-    let [raiseText, raiseTextChanger] = useState('');
-    let [bottomColor, bottomColorChanger] = useState('#aaaaaa');
-    let [bottomVisible, bottomVisibleChanger] = useState('maximum');
-    const bottomTexts = {
-        maximum: `최대 ${Math.min(gameInfo.chips - gameInfo.lastRaisedChips, gameInfo.enemyChips)}개`,
-        minimum: `최소 1개`,
-        nan: `숫자를 입력하세요`,
-        nai: `정수를 입력하세요`,
-        nothing: '',
+    const meter = useRef(null);
+    let [raiseChips, raiseChipsChanger] = useState(1);
+    let [raiseSelected, raiseSelectedChanger] = useState(false);
+    function MeterMouseDown(e) {
+        raiseSelectedChanger(true);
+    }
+    function MeterMouseUp(e) {
+        raiseSelectedChanger(false);
+    }
+    function MeterMouseMove(e) {
+        if (raiseSelected) {
+            const width = meter.current.offsetWidth;
+            const x = e.nativeEvent.offsetX;
+            const max = meter.current.max;
+            meter.current.value = Math.round(x / width * max);
+            raiseChipsChanger(meter.current.value);
+        }
     }
     return (
         <>
@@ -223,36 +232,27 @@ function PlayRaise(props) {
             </div>
             <div className="play-middle">
                 {gameInfo.lastRaisedChips !== 0 ? <div className="play-middle-top-text">{gameInfo.lastRaisedChips}개 받고</div> : null}
-                <input type="number" placeholder="칩 입력" onChange={(e) => { raiseTextChanger(e.target.value) }} />
-                <div className="play-middle-bottom-text" style={{ 'color': bottomColor }}>
-                    {bottomTexts[bottomVisible]}
+                <meter
+                    min={0}
+                    max={Math.min(gameInfo.chips - gameInfo.lastRaisedChips, gameInfo.enemyChips)}
+                    value={1}
+                    ref={meter}
+                    onMouseDown={MeterMouseDown}
+                    onMouseMove={MeterMouseMove}
+                    onMouseUp={MeterMouseUp}
+                >
+                </meter>
+                <div className="play-middle-bottom-text">
+                    {`${raiseChips}개 레이즈`}
                 </div>
             </div>
-            <div className="play-right button" onClick={() => {
-                if (isNaN(Number(raiseText))) {
-                    bottomColorChanger('red');
-                    bottomVisibleChanger('nan');
-                }
-                else if (Number.isInteger(Number(raiseText)) !== true) {
-                    bottomColorChanger('red');
-                    bottomVisibleChanger('nai');
-                }
-                else if (Number(raiseText) > (Math.min(gameInfo.chips - gameInfo.lastRaisedChips, gameInfo.enemyChips))) {
-                    bottomColorChanger('red');
-                    bottomVisibleChanger('maximum');
-                }
-                else if (Number(raiseText) < 1) {
-                    bottomColorChanger('red');
-                    bottomVisibleChanger('minimum');
-                }
-                else {
-                    bottomColorChanger('#aaaaaa');
-                    bottomVisibleChanger('nothing');
-                    socket.emit('request : raise', Number(raiseText));
-                }
-            }}>
-                확인
-            </div>
+            {raiseChips > 0 ?
+                <div className="play-right button" onClick={() => {
+                    socket.emit('request : raise', Number(raiseChips));
+                }}>
+                    확인
+                </div>
+                : null}
 
         </>
     )

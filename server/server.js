@@ -30,7 +30,7 @@ let waitClient = '';
 io.on('connection', socket => {
     clients[socket.id] = new Client(++userCount, socket.id);
     clients[userCount] = socket.id;
-    console.log(`User ${userCount} (id:${socket.id}) connected!`);
+    console.log(`User ${userCount} (id:${socket.id}) connected! ${new Date().toISOString()}`);
 
     let TimeCheck = setInterval(() => {
         const now = new Date().getTime();
@@ -50,7 +50,7 @@ io.on('connection', socket => {
     //socket.on
 
     socket.on('disconnect', () => {
-        console.log(`User ${clients[socket.id].number} (id:${socket.id}) disconnected!`);
+        console.log(`User ${clients[socket.id].number} (id:${socket.id}) disconnected! ${new Date().toISOString()}`);
         if (clients[socket.id].isGaming) {
             const enemyId = clients[socket.id].enemyId;
             const main = clients[socket.id].gameInfo.main ? socket.id : enemyId;

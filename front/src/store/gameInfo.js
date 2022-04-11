@@ -41,6 +41,7 @@ export const gameInfoSlice = createSlice({
     name: 'gameInfo',
     initialState,
     reducers: {
+        resetGame: () => initialState,
         initGame: (state, action) => {
             state.main = action.payload.main;
             state.myTurn = action.payload.initTurn;
@@ -265,6 +266,6 @@ export const gameInfoSlice = createSlice({
     },
 })
 
-export const { initGame, changeInfoAll, changeInfoValue, toggleInfoValue, initRound, increasePhase, endRound, gameOver, turnOffChipsChange, tenDie } = gameInfoSlice.actions
+export const { resetGame, initGame, changeInfoAll, changeInfoValue, toggleInfoValue, initRound, increasePhase, endRound, gameOver, turnOffChipsChange, tenDie } = gameInfoSlice.actions
 
 export default gameInfoSlice.reducer

@@ -1,4 +1,4 @@
-import { initGame, changeInfoValue, endRound, gameOver, increasePhase, initRound, toggleInfoValue, turnOffChipsChange, tenDie } from "./store/gameInfo";
+import { initGame, changeInfoValue, endRound, gameOver, increasePhase, initRound, toggleInfoValue, turnOffChipsChange, tenDie, resetGame } from "./store/gameInfo";
 import { changePage } from "./store/page";
 
 export default function Socket(socket, dispatch) {
@@ -12,6 +12,7 @@ export default function Socket(socket, dispatch) {
         dispatch(changeInfoValue(['enemyId', enemyId]));
     });
     socket.on('response : game start', (gameInfo) => {
+        dispatch(resetGame());
         dispatch(initGame(gameInfo));
         dispatch(changePage('gamePage'));
         isMain = gameInfo.main;
