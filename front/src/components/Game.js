@@ -8,10 +8,8 @@ export default function Game(props) {
     const socket = props.socket;
     const isMain = gameInfo.main;
     useEffect(() => {
-        console.log(gameInfo.round, isMain);
-        if (gameInfo.round === 0 && isMain)
-            socket.emit('request : round start');
-    }, [gameInfo.round]);
+        isMain && socket.emit('request : round start');
+    }, []);
     return (
         <div className="game-container">
             {gameInfo.visibleResult ?
@@ -213,6 +211,7 @@ function PlayRaise(props) {
     let [raiseSelected, raiseSelectedChanger] = useState(false);
     function MeterMouseDown(e) {
         raiseSelectedChanger(true);
+        console.log(meter.current.parentNode.offsetLeft);
     }
     function MeterMouseUp(e) {
         raiseSelectedChanger(false);
@@ -222,8 +221,26 @@ function PlayRaise(props) {
             const width = meter.current.offsetWidth;
             const x = e.nativeEvent.offsetX;
             const max = meter.current.max;
-            meter.current.value = Math.round(x / width * max);
-            raiseChipsChanger(meter.current.value);
+            raiseChipsChanger(Math.round(x / width * max));
+        }
+    }
+    function MeterTouchStart(e) {
+        raiseSelectedChanger(true);
+    }
+    function MeterTouchEnd(e) {
+        raiseSelectedChanger(false);
+    }
+    function MeterTouchMove(e) {
+        if (raiseSelected) {
+            const width = meter.current.offsetWidth;
+            const left = meter.current.parentNode.offsetLeft;
+            const max = meter.current.max;
+            let val = Math.round((e.touches[0].clientX - left) / width * max);
+            if (val < 0)
+                val = 0;
+            if (val > max)
+                val = max;
+            raiseChipsChanger(val);
         }
     }
     return (
@@ -236,11 +253,14 @@ function PlayRaise(props) {
                 <meter
                     min={0}
                     max={Math.min(gameInfo.chips - gameInfo.lastRaisedChips, gameInfo.enemyChips)}
-                    value={1}
+                    value={raiseChips}
                     ref={meter}
                     onMouseDown={MeterMouseDown}
                     onMouseMove={MeterMouseMove}
                     onMouseUp={MeterMouseUp}
+                    onTouchStart={MeterTouchStart}
+                    onTouchMove={MeterTouchMove}
+                    onTouchEnd={MeterTouchEnd}
                 >
                 </meter>
                 <div className="play-middle-bottom-text">
