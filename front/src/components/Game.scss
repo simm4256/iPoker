@@ -291,18 +291,23 @@ div {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
-    top: -30%;
-    font-size: 60%;
+    top: -470%;
+    font-size: 70%;
     width: 100%;
+    color: #aaaaaa
 }
 
 .play-middle-bottom-text {
     position: absolute;
     transform: translate(-50%, -50%);
     left: 50%;
-    top: 130%;
-    font-size: 70%;
-    width: 100%;
+    top: -400%;
+    font-size: 100%;
+    width: 120%;
+
+    span {
+        color: red;
+    }
 }
 
 .play-middle input {

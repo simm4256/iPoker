@@ -264,7 +264,7 @@ function PlayRaise(props) {
                 >
                 </meter>
                 <div className="play-middle-bottom-text">
-                    {`${raiseChips}개 레이즈`}
+                    <span>{`${raiseChips}`}</span>개 레이즈
                 </div>
             </div>
             {raiseChips > 0 ?
