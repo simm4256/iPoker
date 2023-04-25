@@ -2,10 +2,7 @@
 
 ### iPoker는 '인디언 포커'로 알려져 있는 2인용 게임을 <br> 실시간 웹 게임으로 구현한 개인 프로젝트입니다.
 
-<br>
 
-### <a href="http://ipoker-client.s3-website.ap-northeast-2.amazonaws.com/" target="_blank">여기</a> 에서 지금 한 번 해보세요!
-(1:1 게임이라서 같이 할 사람이 필요합니다. 혹은 같이 할 2번째 브라우저라던가요...)
 
 <br><br>
 # Stacks
@@ -86,6 +83,9 @@
 * 레이즈 칩 입력 부분 변경
   * HTML5 Meter로 변경함으로써 모바일 환경 UX 상승
   * 레이즈 문구를 화면 가운데로 올림 (기존 위치는 모바일에서 터치할 때 손에 가려짐)
+  
+### 23.04.25
+* AWS free tier 만료로 인한 ec2 서버 종료
 
 <br><br>
 # TODO
